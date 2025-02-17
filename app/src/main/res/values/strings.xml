@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Fendustries Employees</string>
+    <string name="loading">Give us a second… (Loading)</string>
+    <string name="try_again_button_text">Try Again?</string>
+    <string name="avatar_content_description">Employee Profile Picture</string>
+    <string name="network_error">Oof, our server just had a moment (Network Error)</string>
+    <string name="general_error">Yikes, we got some data back but it was garbage (General Error)</string>
+    <string name="no_results_error">Hello? Maybe everyone is at lunch? (No Employees Found)</string>
+</resources>
