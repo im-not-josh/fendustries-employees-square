@@ -5,6 +5,7 @@ plugins {
     kotlin("plugin.serialization") version libs.versions.kotlin.serialization
     kotlin("kapt")
     alias(libs.plugins.dagger.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -57,6 +58,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+
     implementation(libs.coil.compose)
     implementation(libs.coil.network)
 
@@ -69,6 +75,7 @@ dependencies {
 
     implementation(libs.retrofit)
     implementation(libs.square.okhttp)
+    implementation(libs.square.okhttp.logginginterceptor)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)

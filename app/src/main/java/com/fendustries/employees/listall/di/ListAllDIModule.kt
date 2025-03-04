@@ -11,6 +11,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
@@ -23,9 +25,17 @@ object ListAllDIModule {
         fun providesRetrofit(): Retrofit {
             val kotlinxJson = Json { ignoreUnknownKeys = true }
 
+            val logger = HttpLoggingInterceptor()
+            logger.level = HttpLoggingInterceptor.Level.BODY
+
+            val client = OkHttpClient.Builder()
+                .addInterceptor(logger)
+                .build()
+
             return Retrofit
                 .Builder()
                 .baseUrl("https://s3.amazonaws.com/sq-mobile-interview/")
+                .client(client)
                 .addConverterFactory(kotlinxJson.asConverterFactory("application/json".toMediaType()))
                 .build()
         }
