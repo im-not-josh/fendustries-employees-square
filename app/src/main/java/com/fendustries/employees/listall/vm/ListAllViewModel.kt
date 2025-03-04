@@ -7,11 +7,14 @@ import com.fendustries.employees.listall.repository.remote.FetchEmployeesRemoteR
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
+import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,6 +28,12 @@ class ListAllViewModel @Inject constructor(
 
     private val _internalActions = Channel<ListAllActions>(capacity = UNLIMITED)
 
+    val actions: SendChannel<ListAllActions> = _internalActions
+
+    private val _internalEvents = Channel<ListAllEvents>(capacity = UNLIMITED)
+
+    val events: Flow<ListAllEvents> = _internalEvents.receiveAsFlow()
+
     init {
         _internalActions.consumeAsFlow()
             .onEach {
@@ -37,10 +46,6 @@ class ListAllViewModel @Inject constructor(
         // Using the init block also means we wont refresh again for config changes like orientation
         // changes seeing as our VM instance survives those changes.
         refreshEmployees()
-    }
-
-    fun sendAction(element: ListAllActions) {
-        _internalActions.trySend(element)
     }
 
     private fun handleAction(action: ListAllActions) {

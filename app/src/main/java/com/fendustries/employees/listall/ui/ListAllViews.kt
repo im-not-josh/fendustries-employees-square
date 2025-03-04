@@ -71,7 +71,7 @@ fun ListAllUiContent(
                 if (state.error == ListAllScreenState.SUCCESS) {
                     // Its amazing how simple Jetpack compose has made adding a toolbar action - 3 lines of code to refresh, very cool
                     IconButton(onClick = {
-                        viewModel.sendAction(ListAllActions.Refresh)
+                        viewModel.actions.trySend(ListAllActions.Refresh)
                     }) {
                         Icon(Icons.Outlined.Refresh, contentDescription = "Refresh")
                     }
@@ -83,7 +83,7 @@ fun ListAllUiContent(
             ListAllErrorUiContent(
                 state.error,
                 modifier.padding(padding),
-                { viewModel.sendAction(ListAllActions.Refresh) }
+                { viewModel.actions.trySend(ListAllActions.Refresh) }
             )
         } else {
             // In landscape orientation, lazy col looks terrible, so switching to lazy row.
