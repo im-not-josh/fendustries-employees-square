@@ -2,7 +2,7 @@ package com.fendustries.employees.listall.vm
 
 import com.fendustries.employees.listall.repository.remote.responsemodel.Employee
 
-// A cut down version of Employee just for view purposes (we dont need or want to show all data from Employee)
+// A cut down version of Employee just for view purposes (we don't need or want to show all data from Employee)
 data class EmployeeSummary(
     val name: String,
     val team: String,

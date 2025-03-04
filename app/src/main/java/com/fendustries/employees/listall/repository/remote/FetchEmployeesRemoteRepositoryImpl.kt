@@ -23,7 +23,7 @@ class FetchEmployeesRemoteRepositoryImpl @Inject constructor(
                 val body = response.body()
 
                 if (body == null) {
-                    // Possible but unlikely for body to be empty - we will trest as error because we always expect _something_ here
+                    // Possible but unlikely for body to be empty - we will treat as error because we always expect _something_ here
                     NetworkResponse.Failure(IllegalStateException("Body was null"))
                 } else {
                     NetworkResponse.Success(body)

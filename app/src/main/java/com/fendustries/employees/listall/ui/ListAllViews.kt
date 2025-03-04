@@ -134,7 +134,7 @@ fun EmployeeSummaryCard(
 
 @Preview(showBackground = true)
 @Composable
-fun EmployeeSummaryCardPriver() {
+fun EmployeeSummaryCardPreview() {
     EmployeeSummaryCard(
         EmployeeSummary("Joe Bloggs", "Awesome Team", "somUrl"),
     )
