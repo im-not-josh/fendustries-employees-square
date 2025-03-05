@@ -137,7 +137,7 @@ class ListAllViewModelTests {
             viewModel.uiState.test {
                 launch {
                     // When refresh
-                    viewModel.sendAction(ListAllActions.Refresh)
+                    viewModel.actions.trySend(ListAllActions.Refresh)
                 }.join()
 
                 val initialLoadingState = awaitItem()
