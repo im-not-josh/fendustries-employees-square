@@ -5,6 +5,7 @@ import com.fendustries.employees.listall.repository.remote.responsemodel.Employe
 
 // A cut down version of Employee just for view purposes (we don't need or want to show all data from Employee)
 data class EmployeeSummary(
+    val key: String,
     val name: String,
     val team: String,
     val photoUrl: String?,
@@ -13,6 +14,7 @@ data class EmployeeSummary(
 fun List<Employee>.toEmployeeSummaryList1(): List<EmployeeSummary> {
     return this.map {
         EmployeeSummary(
+            key = it.uuid,
             name = it.full_name,
             team = it.team,
             photoUrl = it.photo_url_small
@@ -38,6 +40,7 @@ fun List<Employee>.toEmployeeLocal(): List<EmployeeLocal> {
 fun List<EmployeeLocal>.toEmployeeSummaryList2(): List<EmployeeSummary> {
     return this.map {
         EmployeeSummary(
+            it.uuid,
             it.full_name,
             it.team,
             it.photo_url_small

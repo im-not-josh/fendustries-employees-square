@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.fendustries.employees.listall.network.response.NetworkResponse
 import com.fendustries.employees.listall.repository.local.EmployeeDao
 import com.fendustries.employees.listall.repository.remote.FetchEmployeesRemoteRepository
+import com.fendustries.employees.navigation.Routes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
@@ -55,6 +56,9 @@ class ListAllViewModel @Inject constructor(
         when (action) {
             is ListAllActions.Refresh -> {
                 refreshEmployees()
+            }
+            is ListAllActions.TapEmployee -> {
+                _internalEvents.trySend(ListAllEvents.NavigateToRoute(Routes.EmployeeDetail(action.key)))
             }
         }
     }

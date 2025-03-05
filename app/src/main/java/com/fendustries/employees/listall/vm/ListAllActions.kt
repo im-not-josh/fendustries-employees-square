@@ -5,4 +5,5 @@ package com.fendustries.employees.listall.vm
  */
 sealed class ListAllActions {
     data object Refresh : ListAllActions()
+    data class TapEmployee(val key: String) : ListAllActions()
 }
