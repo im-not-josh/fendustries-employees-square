@@ -1,6 +1,11 @@
 package com.fendustries.employees.listall.di
 
+import android.content.Context
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.fendustries.employees.listall.network.FetchEmployeesAPIService
+import com.fendustries.employees.listall.repository.local.EmployeeDao
+import com.fendustries.employees.listall.repository.local.EmployessDatabase
 import com.fendustries.employees.listall.repository.remote.FetchEmployeesRemoteRepository
 import com.fendustries.employees.listall.repository.remote.FetchEmployeesRemoteRepositoryImpl
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -8,6 +13,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -44,6 +50,19 @@ object ListAllDIModule {
         @Singleton
         fun provideFetch(retrofit: Retrofit): FetchEmployeesAPIService {
             return retrofit.create(FetchEmployeesAPIService::class.java)
+        }
+
+        @Provides
+        @Singleton
+        fun providesEmployeesDao(db: EmployessDatabase): EmployeeDao {
+            return db.employeeDao()
+        }
+
+        @Provides
+        @Singleton
+        fun providesDB(@ApplicationContext context: Context): EmployessDatabase {
+            return Room.databaseBuilder(context, EmployessDatabase::class.java, "employees")
+                .fallbackToDestructiveMigration().build()
         }
     }
 

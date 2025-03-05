@@ -3,6 +3,7 @@ package com.fendustries.employees.listall.vm
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fendustries.employees.listall.network.response.NetworkResponse
+import com.fendustries.employees.listall.repository.local.EmployeeDao
 import com.fendustries.employees.listall.repository.remote.FetchEmployeesRemoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -20,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListAllViewModel @Inject constructor(
-    private val fetchEmployeesRemoteRepository: FetchEmployeesRemoteRepository
+    private val fetchEmployeesRemoteRepository: FetchEmployeesRemoteRepository,
+    private val employeeDao: EmployeeDao
 ) : ViewModel() {
     private val _internalUiState = MutableStateFlow(ListAllUiState(error = ListAllScreenState.LOADING))
 
@@ -45,12 +47,35 @@ class ListAllViewModel @Inject constructor(
         // For now, this seemed a better/simpler option.
         // Using the init block also means we wont refresh again for config changes like orientation
         // changes seeing as our VM instance survives those changes.
-        refreshEmployees()
+//        refreshEmployees()
+        loadLocalEmployees()
     }
 
     private fun handleAction(action: ListAllActions) {
         when (action) {
             is ListAllActions.Refresh -> {
+                refreshEmployees()
+            }
+        }
+    }
+
+    private fun loadLocalEmployees() {
+        val loadingState = ListAllUiState(emptyList(), ListAllScreenState.LOADING)
+        _internalUiState.value = loadingState
+
+        viewModelScope.launch {
+            val result = employeeDao.getAllEmployees()
+
+            val newUiState = if (result.isEmpty()) {
+                ListAllUiState(allEmployees = emptyList(), error = ListAllScreenState.NO_EMPLOYEES)
+
+            } else {
+                ListAllUiState(allEmployees = result.toEmployeeSummaryList2(), error = ListAllScreenState.SUCCESS)
+            }
+
+            _internalUiState.value = newUiState
+
+            if (result.isEmpty()) {
                 refreshEmployees()
             }
         }
@@ -75,7 +100,10 @@ class ListAllViewModel @Inject constructor(
                     if (response.body.employees.isEmpty()) {
                         ListAllUiState(allEmployees = emptyList(), error = ListAllScreenState.NO_EMPLOYEES)
                     } else {
-                        ListAllUiState(allEmployees = response.body.employees.toEmployeeSummaryList(), error = ListAllScreenState.SUCCESS)
+                        employeeDao.deleteAll()
+                        employeeDao.insertAll(response.body.employees.toEmployeeLocal())
+
+                        ListAllUiState(allEmployees = response.body.employees.toEmployeeSummaryList1(), error = ListAllScreenState.SUCCESS)
                     }
                 }
             }

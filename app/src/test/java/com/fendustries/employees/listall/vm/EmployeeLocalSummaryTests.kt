@@ -6,7 +6,7 @@ import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import org.junit.Test
 
-class EmployeeSummaryTests {
+class EmployeeLocalSummaryTests {
     @Test
     fun `given a list of employees, when transform to employee summary, then order is alphabetical with correct info`() {
         // Given employee list
